@@ -50,8 +50,10 @@ sending device and decrypted on the receiving one.</p>
 to know as little as possible, and what it can see is worth stating plainly:</p>
 <ul>
   <li>It <strong>cannot read</strong> your lists. It receives bytes it has no key for.</li>
-  <li>Messages are addressed to identifiers derived from your household's own keys, which
-      the relay cannot compute and which change over time.</li>
+  <li>Messages are addressed to identifiers derived from keys the relay does not have and
+      cannot compute. The ones your devices use for routine syncing change every hour. The
+      one used to hand a new device its invitation lasts as long as that invitation does,
+      which is at most a day.</li>
   <li>It <strong>does</strong> see the network address a message arrives from and the time it
       arrives, as any server does.</li>
   <li>Messages are deleted after seven days. Larger transfers are deleted after ninety.</li>
@@ -61,9 +63,11 @@ including one you run yourself.</p>
 
 <h2>Notifications</h2>
 <p>If you turn on notifications, a separate small service asks Apple or Google to wake your
-other device. That service receives a device token and a timestamp. It never receives your
-lists, your household, or anything the relay holds. It is deliberately a different program
-from the relay so that neither one holds both halves.</p>
+other device. That service receives a device token, the time, and one flag saying whether the
+notification should be visible or silent — which means it can tell that something was added
+to a list, but not to which list, by whom, or what it was. It never receives your lists, your
+household, or anything the relay holds. It is deliberately a different program from the relay
+so that neither one holds both halves.</p>
 
 <h2>Diagnostics</h2>
 <p>The app keeps a diagnostic log on your device to help explain failures. It stays there.
