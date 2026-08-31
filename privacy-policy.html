@@ -1,0 +1,106 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Conscribe — Privacy Policy</title>
+<style>
+  :root { color-scheme: light dark; --ink: #1a1a1a; --dim: #5c5c5c; --bg: #fbfaf8; --rule: #e3e0da; }
+  @media (prefers-color-scheme: dark) {
+    :root { --ink: #e8e6e1; --dim: #a09c95; --bg: #16151a; --rule: #2e2c33; }
+  }
+  body { background: var(--bg); color: var(--ink); margin: 0; padding: 3rem 1.25rem 5rem;
+         font: 16px/1.65 -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif; }
+  main { max-width: 38rem; margin: 0 auto; }
+  h1 { font-size: 1.6rem; margin: 0 0 .25rem; letter-spacing: -.01em; }
+  h2 { font-size: 1rem; margin: 2.25rem 0 .5rem; letter-spacing: .02em; text-transform: uppercase; }
+  .updated { color: var(--dim); font-size: .85rem; margin: 0 0 2rem; }
+  .lede { font-size: 1.05rem; border-left: 3px solid var(--rule); padding-left: 1rem; margin: 0 0 1rem; }
+  p { margin: 0 0 .9rem; }
+  ul { margin: 0 0 .9rem; padding-left: 1.2rem; }
+  li { margin-bottom: .35rem; }
+  footer { color: var(--dim); font-size: .85rem; margin-top: 3rem;
+           border-top: 1px solid var(--rule); padding-top: 1rem; }
+  a { color: inherit; }
+</style>
+</head>
+<body>
+<main>
+
+<h1>Conscribe — Privacy Policy</h1>
+<p class="updated">Last updated August 31, 2026</p>
+
+<p class="lede">Conscribe has no accounts and no user database. Your lists live on your
+devices. When they sync, they are encrypted end to end, and the server that passes them
+along cannot read them.</p>
+
+<h2>What is collected</h2>
+<p>Nothing that identifies you. There is no sign-up, no account, no email address, no phone
+number, and no profile. Nobody operating Conscribe has a list of who uses it, because no
+such list is created.</p>
+
+<h2>Your lists</h2>
+<p>Your lists are stored on your device. When you share a list with other devices in your
+household, they sync directly over your local network when those devices are together, and
+through a relay server when they are apart. In both cases the contents are encrypted on the
+sending device and decrypted on the receiving one.</p>
+
+<h2>The relay</h2>
+<p>The relay holds encrypted messages until the other device collects them. It is designed
+to know as little as possible, and what it can see is worth stating plainly:</p>
+<ul>
+  <li>It <strong>cannot read</strong> your lists. It receives bytes it has no key for.</li>
+  <li>Messages are addressed to identifiers derived from your household's own keys, which
+      the relay cannot compute and which change over time.</li>
+  <li>It <strong>does</strong> see the network address a message arrives from and the time it
+      arrives, as any server does.</li>
+  <li>Messages are deleted after seven days. Larger transfers are deleted after ninety.</li>
+</ul>
+<p>If you would rather not use the default relay, you can point the app at a different one,
+including one you run yourself.</p>
+
+<h2>Notifications</h2>
+<p>If you turn on notifications, a separate small service asks Apple or Google to wake your
+other device. That service receives a device token and a timestamp. It never receives your
+lists, your household, or anything the relay holds. It is deliberately a different program
+from the relay so that neither one holds both halves.</p>
+
+<h2>Diagnostics</h2>
+<p>The app keeps a diagnostic log on your device to help explain failures. It stays there.
+It is sent only if you choose to send it, and it is encrypted before it leaves your device.
+Nothing is uploaded on its own.</p>
+
+<h2>Permissions</h2>
+<ul>
+  <li><strong>Camera</strong> — only to scan a pairing code when adding a device. Images are
+      not stored and not transmitted.</li>
+  <li><strong>Local network</strong> — to find your other devices so they can sync directly
+      instead of through the relay.</li>
+  <li><strong>Notifications</strong> — optional, and only asked for when you turn them on.</li>
+</ul>
+<p>Conscribe does not ask for your location, contacts, or photo library.</p>
+
+<h2>No analytics, advertising, or tracking</h2>
+<p>There are no analytics, no advertising, no trackers, and no third-party software
+development kits. Conscribe does not contact any service other than the relay you have
+configured and, if you have enabled notifications, the wake service.</p>
+
+<h2>Deleting your data</h2>
+<p>Delete the app. There is no account to close and no copy held anywhere to request the
+deletion of. Anything still sitting on the relay expires on the schedule above.</p>
+
+<h2>Children</h2>
+<p>Conscribe is not directed at children, and collects no personal information from anyone
+regardless of age.</p>
+
+<h2>Changes</h2>
+<p>If this policy changes, the date above changes with it.</p>
+
+<h2>Contact</h2>
+<p>Questions about this policy: <a href="mailto:egrahamlarue@gmail.com">egrahamlarue@gmail.com</a></p>
+
+<footer>Conscribe is a local-first shared shopping list. It has no server that holds your data.</footer>
+
+</main>
+</body>
+</html>
