@@ -28,22 +28,30 @@
 <main>
 
 <h1>Conscribe — Privacy Policy</h1>
-<p class="updated">Last updated November 4, 2026</p>
+<p class="updated">Last updated November 5, 2026</p>
 
 <p class="lede">Conscribe has no accounts and no user database. Your lists live on your
-devices. When they sync, they are encrypted end to end, and the server that passes them
-along cannot read them.</p>
+devices. When devices sync, the lists are encrypted end to end, and the relay server
+cannot decrypt them.</p>
 
 <h2>What is collected</h2>
-<p>Nothing that identifies you. There is no sign-up, no account, no email address, no phone
-number, and no profile. Nobody operating Conscribe has a list of who uses it, because no
-such list is created.</p>
+<p>There is no sign-up, no account, no email address, no phone number, and no profile.
+Nobody operating Conscribe has a list of who uses it, because no such list is created. The
+relay and the wake service see network addresses and device tokens while they work; the
+sections below say what each one sees and keeps.</p>
 
 <h2>Your lists</h2>
-<p>Your lists are stored on your device. When you share a list with other devices in your
-household, they sync directly over your local network when those devices are together, and
-through a relay server when they are apart. In both cases the contents are encrypted on the
-sending device and decrypted on the receiving one.</p>
+<p>Your lists are stored on your device. Devices in your household sync directly over your
+local network when they are together, and through a relay server when they are apart. A list
+shared with someone outside your household always syncs through the relay. In every case the
+contents are encrypted on the sending device and decrypted on the receiving one.</p>
+
+<h2>Purchases</h2>
+<p>Purchases are made through Apple or Google, which handle payment. Conscribe never receives your payment
+details, your receipt, or your store account. When a device unlocks Conscribe, it records in your household's
+encrypted data that it holds an unlock, which store it came from, and the purchase date. When a household starts
+its free trial, it records the day the trial started. The other devices in your household can see this; the relay
+cannot.</p>
 
 <h2>The relay</h2>
 <p>The relay holds encrypted messages until the other device collects them. It is designed
@@ -51,33 +59,40 @@ to know as little as possible, and what it can see is worth stating plainly:</p>
 <ul>
   <li>It <strong>cannot read</strong> your lists. It receives bytes it has no key for.</li>
   <li>Messages are addressed to identifiers derived from keys the relay does not have and
-      cannot compute. The ones your household's devices use for routine syncing change each
-      time the household's group keys advance (when a device joins or is removed, for
-      example), not on a clock. The ones used to hand a new device its invitation are
-      separate: a message there that nobody has collected is deleted after one day.</li>
+      cannot compute. The identifiers your household's devices use for routine syncing change
+      whenever the household's group keys change (when a device joins or is removed, for
+      example), not on a schedule.</li>
   <li>It <strong>does</strong> see the network address a message arrives from and the time it
       arrives, as any server does.</li>
-  <li>A message nobody collects is deleted after seven days. Some items are kept longer: an
-      invitation that was collected, and larger transfers, are deleted after ninety days.</li>
+  <li>An undelivered message is deleted once its mailbox has gone seven days without a new
+      message, or sooner if the relay restarts.</li>
+  <li>A change to who is in the household is posted once. If no device reads it, it is
+      deleted after one day; once read, it is kept for ninety days.</li>
+  <li>The app deletes its sealed reply to an invitation when the invitation is used or
+      expires after 24 hours. If that fails, the relay deletes it after ninety days.</li>
 </ul>
 <p>If you would rather not use the default relay, you can point the app at a different one,
 including one you run yourself.</p>
 
 <h2>Notifications</h2>
 <p>Conscribe is available for iPhone and for Android, and this one policy covers both.</p>
-<p>Waking your other devices is on by default and can be turned off in Settings. While it is
-on, and once the device is in a household, a separate small service (the wake service) asks
-Apple (iPhone) or Google (Android) to wake your other devices. To do that the app sends the
-wake service this device's push token, which identifies the device to Apple or Google. When
-another household device changes the list, that device sends the wake service a sealed ticket
-for each device it wants to wake, plus one flag saying whether the notification should be
-visible or silent. The service can therefore tell that something was added to a list, but
-not to which list, by whom, or what it was. It never receives your lists, your household, or
-anything the relay holds. It keeps nothing on disk; what it holds in memory (a last-woken
-time per token and rate-limit counters) is lost when it restarts. It is deliberately a
-different program from the relay so that neither one holds both halves.</p>
+<p>Letting your other devices wake this one is on by default. You can turn it off in
+Settings, Sound &amp; alerts, "Let others wake this device". While it is on, and once the
+device is in a household, a separate small service (the wake service) asks Apple (iPhone) or
+Google (Android) to wake this device when another household device changes a list. To do that
+the app sends the wake service this device's push token, which identifies the device to Apple
+or Google, and a secret the app generates. When another household device changes a list, that
+device sends the wake service a sealed ticket for each device it wants to wake, plus one flag
+saying whether the notification should be visible or silent. A visible notification is asked
+for only when an item is added. The service can therefore tell that a list changed, and from
+the flag that an item was added, but not which list, by whom, or what it was. It never
+receives your lists, your household, or anything the relay holds. It keeps nothing on disk.
+What it holds in memory is lost when it restarts: for each token, the last time it was woken,
+whether Apple or Google reported the token invalid, and which Apple server it belongs to; and
+rate-limit counters. It is a separate program from the relay, so neither service sees both
+the push tokens and the encrypted messages.</p>
 <p>The message Apple or Google delivers has no list content: a fixed phrase for a visible
-notification, or nothing at all for a silent one. The wake service, Apple and Google can
+notification, and no text for a silent one. The wake service, Apple and Google can
 each see that a wake was sent to the device and when.</p>
 <p>If you turn waking off, the app stops sending this device's token to the wake service,
 and tells your household's other devices to stop waking it. A ticket the service issued
@@ -87,47 +102,72 @@ request is made at every launch whatever the setting, and the token is kept in m
 sent anywhere while waking is off.</p>
 
 <h2>Diagnostics</h2>
-<p>The app keeps a diagnostic log on your device to help explain failures. It stays there.
-It records, among other things, your devices' names and what synced when; if you turn on
-verbose logging it also records item and list names. Nothing is uploaded on its own. There
-are two ways it can leave the device, both started by you. "Share diagnostics" hands the log
-to the system share sheet, and it goes wherever you choose to send it. "Upload log for
+<p>The app keeps a diagnostic log on your device to help explain failures. By default it
+records faults, changes to who is in the household, and crashes. If you turn on verbose
+logging it also records what synced when and the names of items, lists and devices. Nothing
+is uploaded on its own. There are two ways the log can leave the device, both started by
+you, and either way it includes a table of your list names. "Share diagnostics" hands the log
+to the system share sheet (or copies it, if sharing is not available), and it goes wherever
+you choose to send it. "Upload log for
 support" asks first, encrypts the log on your device with a key that is created there and
 never sent anywhere, and uploads the encrypted log to the relay. Only someone you give the
 code shown on screen can read it.</p>
 
+<h2>Invitation links</h2>
+<p>An invitation is a link that starts with <code>https://conscribeapp.com/j#</code>. Tapping it
+opens Conscribe when the app is installed. When it is not, a page on conscribeapp.com explains what to
+do. The part after the <code>#</code> carries the invitation itself. A browser never sends that part
+to a website, so conscribeapp.com never sees the invitation and keeps nothing about it. (The app you send
+the link through, such as Messages or email, carries the whole link, as it carries any message you
+send.) What conscribeapp.com does see:</p>
+<ul>
+  <li>When a link is tapped, or when a message app or link-preview service fetches it to build a
+      preview, the request reaches conscribeapp.com with the path <code>/j</code> and no invitation.
+      As with any website, the server sees the network address the request came from.</li>
+  <li>Apple or Google fetches two small public files from conscribeapp.com (under
+      <code>/.well-known/</code>) to check that Conscribe may open these links. Those requests carry
+      no invitation.</li>
+  <li>The page at <code>/j</code>, shown when the app is not installed, stores nothing and sends
+      nothing.</li>
+</ul>
+
 <h2>Permissions</h2>
 <ul>
-  <li><strong>Camera</strong> (iPhone only) — only while the scanning screen is open, to read a
-      household's invitation QR code when joining. Images are not stored and not transmitted.
-      The Android app has no camera access; you paste the invitation link instead.</li>
+  <li><strong>Camera</strong> — only while the scanning screen is open, to read a household's
+      invitation QR code when joining. The camera image is read on your device and is not stored
+      or transmitted. You can always paste the invitation link instead.</li>
   <li><strong>Location</strong> — optional, and off unless you turn on "Show Wi-Fi names" on
-      the Local network page. Both iPhone and Android require location permission before an
+      Settings, Sync &amp; relay. Both iPhone and Android require location permission before an
       app may read the name of the Wi-Fi network, so Conscribe asks only then. It reads the
       network's name and never your position. The name is kept on the device and is not sent
       anywhere.</li>
-  <li><strong>Local network</strong> — to find your other devices so they can sync directly
+  <li><strong>Local network</strong> (iPhone) — to find your other devices so they can sync directly
       instead of through the relay.</li>
-  <li><strong>Notifications</strong> — optional, and only asked for when you turn on
-      visible notifications.</li>
-  <li><strong>Siri</strong> (iPhone) — optional. If you turn on Siri indexing, your list names
-      are added to your iPhone's own search index so Siri can find them. They stay on the
+  <li><strong>Notifications</strong> — optional. Asked for only when you turn on a
+      notification setting, or when you create an invitation link, so the app can tell you
+      when someone asks to join.</li>
+  <li><strong>Siri and Spotlight</strong> (iPhone) — optional. If you turn on "Find your lists
+      in Spotlight" (Settings, Advanced), your list names and item names are added to your
+      iPhone's own search index so Siri and Spotlight can find them. They stay on the
       device.</li>
 </ul>
 <p>Conscribe does not ask for your contacts or photo library.</p>
 
 <h2>No analytics, advertising, or tracking</h2>
-<p>There are no analytics, no advertising, and no trackers. The Android app includes Google's
-Firebase Cloud Messaging library, which receives push messages from Google; what that
-library itself sends to Google is determined by Google, and is covered by Google's privacy
-policy. The iPhone app uses Apple's own push service and includes no third-party software
-development kits. Conscribe does not contact any service other than the relay you have
+<p>There are no analytics, no advertising, and no trackers. Both apps are built with
+open-source libraries for the interface, networking, encryption and syncing. The iPhone app
+uses Apple's own push, purchase and search services and contains no third-party analytics,
+advertising or tracking code. The Android app also includes Google's Firebase Cloud
+Messaging, Google Play services and Google Play Billing libraries, which talk to Google for
+push and purchases; what those libraries send to Google is set by Google and covered by
+Google's privacy policy. Conscribe does not contact any service other than the relay you have
 configured and, unless you have turned waking off, the wake service, plus Apple or Google
-for push as described above.</p>
+for push and for purchases as described above.</p>
 
 <h2>Deleting your data</h2>
-<p>Delete the app. There is no account to close and no copy held anywhere to request the
-deletion of. Anything still sitting on the relay expires on the schedule above.</p>
+<p>Delete the app to remove this device's copy. Other devices in your household keep
+theirs, and a CSV file you exported stays wherever you saved it. There is no account to
+close. Anything still on the relay is encrypted and expires on the schedule above.</p>
 
 <h2>Children</h2>
 <p>Conscribe is not directed at children, and collects no personal information from anyone
@@ -139,7 +179,7 @@ regardless of age.</p>
 <h2>Contact</h2>
 <p>Questions about this policy: <a href="mailto:contact@conscribeapp.com">contact@conscribeapp.com</a></p>
 
-<footer>Conscribe is a local-first shared shopping list. It has no server that holds your data.</footer>
+<footer>Conscribe is a local-first shared shopping list. It has no server that can read your data.</footer>
 
 </main>
 </body>
